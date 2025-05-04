@@ -1,6 +1,5 @@
 # repos.yaml
 repos:
-- id: /.*/
-  apply_requirements: [approved]
-  import_requirements: [approved]
-  allowed_overrides: [apply_requirements, workflow]
+  - id: /.*/
+    allowed_overrides: [workflow, apply_requirements]
+    allow_custom_workflows: true
