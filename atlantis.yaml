@@ -9,6 +9,15 @@ projects:
       enabled: true
     apply_requirements: [mergeable]
     workflow: default
+  - name: my-app-infra-prod
+    dir: .
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
+      enabled: true
+    apply_requirements: [mergeable]
+    workflow: prod
+    branch: \^release-*\
 
 workflows:
   default:
