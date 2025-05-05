@@ -31,10 +31,10 @@ workflows:
     plan:
       steps:
         - init
-        - plan -detailed-exitcode
+        - plan 
     apply:
       steps:
-        - apply -detailed-exitcode
+        - apply
   prod:
     plan:
       steps:
