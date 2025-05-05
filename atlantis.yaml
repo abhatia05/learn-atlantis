@@ -44,7 +44,8 @@ workflows:
               terraform plan -out $PLANFILE
             else
               echo "Skipping plan for non-release branch"
-              exit 0
+              terraform init
+              terraform plan -refresh=false -lock=false -out=$PLANFILE
             fi
           output: strip_refreshing
     apply:
