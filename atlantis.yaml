@@ -10,28 +10,28 @@ projects:
     apply_requirements: [mergeable]
     workflow: default
   - name: my-app-infra-prod
-    dir: .
-    workspace: default
+    dir: proddir
+    workspace: prod
     autoplan:
       when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
       enabled: true
     apply_requirements: [mergeable]
     workflow: prod
-  - name: my-app-infra-release
-    dir: .
-    workspace: default
-    autoplan:
-      when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
-      enabled: true
-    apply_requirements: [mergeable]
-    workflow: default
-    branch: /release/
+  # - name: my-app-infra-release
+  #   dir: .
+  #   workspace: release
+  #   autoplan:
+  #     when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
+  #     enabled: true
+  #   apply_requirements: [mergeable]
+  #   workflow: prod
+  #   branch: /release/
 workflows:
   default:
     plan:
       steps:
         - init
-        - plan
+        - plan 
     apply:
       steps:
         - apply
@@ -42,6 +42,10 @@ workflows:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
               terraform plan -out $PLANFILE
+            else
+              echo "Skipping plan for non-release branch"
+              terraform init
+              terraform plan -refresh=false -lock=false -out=$PLANFILE
             fi
           output: strip_refreshing
     apply:
@@ -50,4 +54,8 @@ workflows:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
               terraform apply $PLANFILE
+            else
+              echo "Skipping plan for non-release branch"
+              exit 0
             fi
+          output: strip_refreshing
