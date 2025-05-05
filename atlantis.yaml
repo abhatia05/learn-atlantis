@@ -32,12 +32,12 @@ workflows:
       - run:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
-              terragrunt plan -out $PLANFILE
+              terraform plan -out $PLANFILE
             fi
           output: strip_refreshing
     apply:
       - run: 
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
-              terragrunt apply $PLANFILE
+              terraform apply $PLANFILE
             fi
