@@ -9,23 +9,23 @@ projects:
       enabled: true
     apply_requirements: [mergeable]
     workflow: default
-  # - name: my-app-infra-prod
-  #   dir: .
-  #   workspace: prod
-  #   autoplan:
-  #     when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
-  #     enabled: true
-  #   apply_requirements: [mergeable]
-  #   workflow: prod
-  - name: my-app-infra-release
+  - name: my-app-infra-prod
     dir: .
-    workspace: release
+    workspace: prod
     autoplan:
       when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
       enabled: true
     apply_requirements: [mergeable]
     workflow: prod
-    branch: /release/
+  # - name: my-app-infra-release
+  #   dir: .
+  #   workspace: release
+  #   autoplan:
+  #     when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
+  #     enabled: true
+  #   apply_requirements: [mergeable]
+  #   workflow: prod
+  #   branch: /release/
 workflows:
   default:
     plan:
@@ -47,7 +47,7 @@ workflows:
       - run:
           command: | 
             if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch" || true
+              Echo "Only Running this in release branch" && exit 0
             fi
           output: show
     apply:
@@ -60,6 +60,6 @@ workflows:
       - run:
           command: | 
             if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch" || true
+              Echo "Only Running this in release branch" && exit 0
             fi
           output: show
