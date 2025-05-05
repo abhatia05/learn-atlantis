@@ -35,8 +35,8 @@ workflows:
     apply:
       steps:
       - run:
-        command: terraform apply -detailed-exitcode
-        output: show
+          command: terraform apply -detailed-exitcode
+          output: show
   prod:
     plan:
       steps:
