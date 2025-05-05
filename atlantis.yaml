@@ -17,7 +17,6 @@ projects:
       enabled: true
     apply_requirements: [mergeable]
     workflow: prod
-    branch: /^release-*/
 
 workflows:
   default:
@@ -31,8 +30,16 @@ workflows:
   prod:
     plan:
       steps:
-        - init
-        - plan
+      - run:
+          command: |
+            if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
+              terraform plan -out $PLANFILE
+            fi
+          output: strip_refreshing
     apply:
       steps:
-        - apply
+      - run: 
+          command: |
+            if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
+              terraform apply $PLANFILE
+            fi
