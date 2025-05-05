@@ -29,9 +29,15 @@ workflows:
         - apply
   prod:
     plan:
-      steps:
-        - init
-        - plan
+      - run:
+          command: |
+            if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
+              terragrunt plan -out $PLANFILE
+            fi
+          output: strip_refreshing
     apply:
-      steps:
-        - apply
+      - run: 
+          command: |
+            if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
+              terragrunt apply $PLANFILE
+            fi
