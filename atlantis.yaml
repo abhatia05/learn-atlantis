@@ -17,7 +17,6 @@ projects:
       enabled: true
     apply_requirements: [mergeable]
     workflow: prod
-    branch: /^release-*/
 
 workflows:
   default:
