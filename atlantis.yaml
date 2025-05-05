@@ -14,7 +14,7 @@ projects:
     workspace: prod
     autoplan:
       when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
-      enabled: true
+      enabled: false
     apply_requirements: [mergeable]
     workflow: prod
   # - name: my-app-infra-release
