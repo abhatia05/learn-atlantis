@@ -14,9 +14,7 @@ projects:
     workspace: prod
     autoplan:
       when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
-      enabled: false
-      branches: 
-        - "release-*"
+      enabled: true
     apply_requirements: [mergeable]
     workflow: prod
   # - name: my-app-infra-release
@@ -44,24 +42,19 @@ workflows:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
               terraform plan -out $PLANFILE
+            else
+              echo "Skipping plan for non-release branch"
+              exit 0
             fi
           output: strip_refreshing
-      - run:
-          command: | 
-            if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch" && exit 0
-            fi
-          output: show
     apply:
       steps:
       - run: 
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
               terraform apply $PLANFILE
+            else
+              echo "Skipping plan for non-release branch"
+              exit 0
             fi
-      - run:
-          command: | 
-            if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch" && exit 0
-            fi
-          output: show
+          output: strip_refreshing
