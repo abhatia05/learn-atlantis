@@ -34,9 +34,7 @@ workflows:
         - plan 
     apply:
       steps:
-      - run:
-          command: terraform apply --auto-approve
-          output: show
+        - apply
   prod:
     plan:
       steps:
