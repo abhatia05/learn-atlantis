@@ -11,7 +11,7 @@ projects:
     workflow: default
   - name: my-app-infra-prod
     dir: .
-    workspace: default
+    workspace: prod
     autoplan:
       when_modified: ["*.tf", "*.tfvars", "../modules/**/*.tf"]
       enabled: true
