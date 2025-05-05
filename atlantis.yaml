@@ -29,6 +29,7 @@ workflows:
         - apply
   prod:
     plan:
+      steps:
       - run:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
@@ -36,6 +37,7 @@ workflows:
             fi
           output: strip_refreshing
     apply:
+      steps:
       - run: 
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
