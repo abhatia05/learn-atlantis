@@ -35,7 +35,7 @@ workflows:
     apply:
       steps:
       - run:
-          command: terraform apply -detailed-exitcode
+          command: terraform apply
           output: show
   prod:
     plan:
@@ -43,13 +43,13 @@ workflows:
       - run:
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
-              terraform plan -out $PLANFILE -detailed-exitcode
+              terraform plan -out $PLANFILE
             fi
           output: strip_refreshing
       - run:
           command: | 
             if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch"
+              Echo "Only Running this in release branch" || true
             fi
           output: show
     apply:
@@ -57,11 +57,11 @@ workflows:
       - run: 
           command: |
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
-              terraform apply $PLANFILE -detailed-exitcode
+              terraform apply $PLANFILE
             fi
       - run:
           command: | 
             if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
-              Echo "Only Running this in release branch"
+              Echo "Only Running this in release branch" || true
             fi
           output: show
