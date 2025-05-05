@@ -44,6 +44,12 @@ workflows:
               terraform plan -out $PLANFILE -detailed-exitcode
             fi
           output: strip_refreshing
+      - run:
+          command: | 
+            if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
+              Echo "Only Running this in release branch"
+            fi
+          output: show
     apply:
       steps:
       - run: 
@@ -51,3 +57,9 @@ workflows:
             if echo "$HEAD_BRANCH_NAME" | grep -q "^release-"; then
               terraform apply $PLANFILE -detailed-exitcode
             fi
+      - run:
+          command: | 
+            if echo "$HEAD_BRANCH_NAME" | grep -vq "^release-"; then
+              Echo "Only Running this in release branch"
+            fi
+          output: show
